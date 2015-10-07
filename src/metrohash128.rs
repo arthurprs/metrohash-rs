@@ -35,7 +35,7 @@ impl MetroHash128 {
         }
     }
 
-    fn finish128(&self) -> [u64; 2] {
+    fn finish128(&self) -> (u64, u64) {
         // copy internal state
         let mut v = self.v;
 
@@ -94,7 +94,7 @@ impl MetroHash128 {
         v[0] = v[0] + (rotate_right((v[0] * K2) + v[1], 13));
         v[1] = v[1] + (rotate_right((v[1] * K3) + v[0], 37));
 
-        [v[0].0, v[1].0]
+        (v[0].0, v[1].0)
     }
 }
 
@@ -163,6 +163,6 @@ impl Hasher for MetroHash128 {
 
     #[inline(always)]
     fn finish(&self) -> u64 {
-        self.finish128()[0]
+        self.finish128().0
     }
 }
