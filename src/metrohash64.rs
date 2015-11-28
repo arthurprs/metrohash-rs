@@ -11,7 +11,7 @@ const K3: Wrapping<u64> = Wrapping(0x30BC5B29);
 
 pub struct MetroHash64 {
     v: [Wrapping<u64>; 4],
-    b: [u8; 32],
+    b: [u64; 4],
     vseed: Wrapping<u64>,
     bytes: usize,
 }
@@ -52,7 +52,7 @@ impl Hasher for MetroHash64 {
 
             unsafe {
                 ptr::copy_nonoverlapping(ptr as *const u8,
-                                         (&mut self.b[0] as *mut _)
+                                         (&mut self.b as *mut _ as *mut u8)
                                              .offset((self.bytes % 32) as isize),
                                          fill);
             }
@@ -96,7 +96,9 @@ impl Hasher for MetroHash64 {
         // store remaining self.bytes in input buffer
         if ptr < end {
             unsafe {
-                ptr::copy_nonoverlapping(ptr as *const u8, &mut self.b[0], end - ptr);
+                ptr::copy_nonoverlapping(ptr as *const u8,
+                                         &mut self.b as *mut _ as *mut u8,
+                                         end - ptr);
             }
         }
     }
