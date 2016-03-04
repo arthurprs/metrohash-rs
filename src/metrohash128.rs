@@ -11,7 +11,7 @@ const K3: Wrapping<u64> = Wrapping(0x2F5870A5);
 
 pub struct MetroHash128 {
     v: [Wrapping<u64>; 4],
-    b: [u8; 32],
+    b: [u64; 4],
     bytes: usize,
 }
 
@@ -112,7 +112,7 @@ impl Hasher for MetroHash128 {
 
             unsafe {
                 ptr::copy_nonoverlapping(ptr as *const u8,
-                                         (&mut self.b[0] as *mut _)
+                                         (&mut self.b[0] as *mut _ as *mut u8)
                                              .offset((self.bytes % 32) as isize),
                                          fill);
             }
@@ -125,13 +125,13 @@ impl Hasher for MetroHash128 {
             }
 
             // process full input buffer
-            self.v[0] = self.v[0] + (read_u64(&self.b[ 0] as *const _ as usize) * K0);
+            self.v[0] = self.v[0] + (read_u64(&self.b[0] as *const _ as usize) * K0);
             self.v[0] = rotate_right(self.v[0], 29) + self.v[2];
-            self.v[1] = self.v[1] + (read_u64(&self.b[ 8] as *const _ as usize) * K1);
+            self.v[1] = self.v[1] + (read_u64(&self.b[1] as *const _ as usize) * K1);
             self.v[1] = rotate_right(self.v[1], 29) + self.v[3];
-            self.v[2] = self.v[2] + (read_u64(&self.b[16] as *const _ as usize) * K2);
+            self.v[2] = self.v[2] + (read_u64(&self.b[2] as *const _ as usize) * K2);
             self.v[2] = rotate_right(self.v[2], 29) + self.v[0];
-            self.v[3] = self.v[3] + (read_u64(&self.b[24] as *const _ as usize) * K3);
+            self.v[3] = self.v[3] + (read_u64(&self.b[3] as *const _ as usize) * K3);
             self.v[3] = rotate_right(self.v[3], 29) + self.v[1];
         }
 
@@ -156,7 +156,7 @@ impl Hasher for MetroHash128 {
         // store remaining self.bytes in input buffer
         if ptr < end {
             unsafe {
-                ptr::copy_nonoverlapping(ptr as *const u8, &mut self.b[0], end - ptr);
+                ptr::copy_nonoverlapping(ptr as *const u8, &mut self.b[0] as *mut _ as *mut u8, end - ptr);
             }
         }
     }
