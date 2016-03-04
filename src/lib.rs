@@ -14,7 +14,6 @@
 //! assert_eq!(hash.get(&1000), Some(&"1000"));
 //! ```
 
-#![cfg_attr(test, feature(test))]
 mod metrohash64;
 mod metrohash128;
 mod utils;

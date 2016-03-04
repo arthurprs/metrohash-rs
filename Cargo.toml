@@ -10,6 +10,10 @@ repository = "https://github.com/arthurprs/metrohash-rs"
 documentation = "https://github.com/arthurprs/metrohash-rs"
 license = "MIT"
 
-[dev-dependencies]
-fnv = "*"
-twox-hash = "*"
+[dependencies.fnv]
+version = "*"
+optional = true
+
+[dependencies.twox-hash]
+version = "*"
+optional = true
