@@ -5,13 +5,11 @@
 //! # Example
 //!
 //! ```rust
-//! #![feature(hashmap_hasher)]
-//!
 //! use std::collections::HashMap;
-//! use std::collections::hash_state::DefaultState;
+//! use std::hash::BuildHasherDefault;
 //! use metrohash::MetroHash;
 //!
-//! let mut hash: HashMap<_, _, DefaultState<MetroHash>> = Default::default();
+//! let mut hash: HashMap<_, _, BuildHasherDefault<MetroHash>> = Default::default();
 //! hash.insert(1000, "1000");
 //! assert_eq!(hash.get(&1000), Some(&"1000"));
 //! ```
