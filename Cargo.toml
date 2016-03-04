@@ -1,6 +1,6 @@
 [package]
 name = "metrohash"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["arthurprs <arthurprs@gmail.com>"]
 description = "Rust implementation of MetroHash, a high quality, high performance hash algorithm"
 readme = "README.md"
@@ -11,9 +11,9 @@ documentation = "https://github.com/arthurprs/metrohash-rs"
 license = "MIT"
 
 [dependencies.fnv]
-version = "*"
+version = "1.0.2"
 optional = true
 
 [dependencies.twox-hash]
-version = "*"
+version = "0.1.1"
 optional = true

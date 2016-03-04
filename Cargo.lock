@@ -1,14 +1,14 @@
 [root]
 name = "metrohash"
-version = "0.1.0"
+version = "0.2.0"
 dependencies = [
- "fnv 1.0.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "fnv 1.0.2 (registry+https://github.com/rust-lang/crates.io-index)",
  "twox-hash 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
 name = "fnv"
-version = "1.0.0"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
 [[package]]
