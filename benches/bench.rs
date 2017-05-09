@@ -1,8 +1,6 @@
 #![cfg_attr(test, feature(test))]
 pub extern crate test;
-#[cfg(feature = "fnv")]
 pub extern crate fnv;
-#[cfg(feature = "twox-hash")]
 pub extern crate twox_hash;
 extern crate metrohash;
 
