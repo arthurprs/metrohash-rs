@@ -15,9 +15,9 @@ pub fn hasher_bench<H>(b: &mut test::Bencher, mut hasher: H, len: usize)
     let bytes: Vec<_> = (0..100).cycle().take(len).collect();
     b.bytes = bytes.len() as u64;
     b.iter(|| {
-        hasher.write(&bytes);
-        hasher.finish()
-    });
+               hasher.write(&bytes);
+               hasher.finish()
+           });
 }
 
 fn siphash_bench(b: &mut test::Bencher, len: usize) {
@@ -80,61 +80,61 @@ fn siphash_0_byte(b: &mut test::Bencher) {
 
 #[cfg(feature = "fnv")]
 mod feature_fnv {
-	use super::*;
+    use super::*;
 
-	fn fnvhash_bench(b: &mut test::Bencher, len: usize) {
-	    hasher_bench(b, <fnv::FnvHasher as Default>::default(), len)
-	}
+    fn fnvhash_bench(b: &mut test::Bencher, len: usize) {
+        hasher_bench(b, <fnv::FnvHasher as Default>::default(), len)
+    }
 
-	#[bench]
-	fn fnvhash_megabyte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 1024 * 1024)
-	}
+    #[bench]
+    fn fnvhash_megabyte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 1024 * 1024)
+    }
 
-	#[bench]
-	fn fnvhash_1024_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 1024)
-	}
+    #[bench]
+    fn fnvhash_1024_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 1024)
+    }
 
-	#[bench]
-	fn fnvhash_512_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 512)
-	}
+    #[bench]
+    fn fnvhash_512_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 512)
+    }
 
-	#[bench]
-	fn fnvhash_256_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 256)
-	}
+    #[bench]
+    fn fnvhash_256_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 256)
+    }
 
-	#[bench]
-	fn fnvhash_128_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 128)
-	}
+    #[bench]
+    fn fnvhash_128_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 128)
+    }
 
-	#[bench]
-	fn fnvhash_32_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 32)
-	}
+    #[bench]
+    fn fnvhash_32_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 32)
+    }
 
-	#[bench]
-	fn fnvhash_16_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 16)
-	}
+    #[bench]
+    fn fnvhash_16_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 16)
+    }
 
-	#[bench]
-	fn fnvhash_4_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 4)
-	}
+    #[bench]
+    fn fnvhash_4_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 4)
+    }
 
-	#[bench]
-	fn fnvhash_1_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 1)
-	}
+    #[bench]
+    fn fnvhash_1_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 1)
+    }
 
-	#[bench]
-	fn fnvhash_0_byte(b: &mut test::Bencher) {
-	    fnvhash_bench(b, 0)
-	}
+    #[bench]
+    fn fnvhash_0_byte(b: &mut test::Bencher) {
+        fnvhash_bench(b, 0)
+    }
 }
 
 #[bench]
@@ -219,59 +219,59 @@ fn metrohash64_0_byte(b: &mut test::Bencher) {
 
 #[cfg(feature = "twox-hash")]
 mod feature_twoxhash {
-	use super::*;
+    use super::*;
 
-	fn xxhash_bench(b: &mut test::Bencher, len: usize) {
-	    hasher_bench(b, twox_hash::XxHash::with_seed(0), len)
-	}
+    fn xxhash_bench(b: &mut test::Bencher, len: usize) {
+        hasher_bench(b, twox_hash::XxHash::with_seed(0), len)
+    }
 
-	#[bench]
-	fn xxhash_megabyte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 1024 * 1024)
-	}
+    #[bench]
+    fn xxhash_megabyte(b: &mut test::Bencher) {
+        xxhash_bench(b, 1024 * 1024)
+    }
 
-	#[bench]
-	fn xxhash_1024_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 1024)
-	}
+    #[bench]
+    fn xxhash_1024_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 1024)
+    }
 
-	#[bench]
-	fn xxhash_512_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 512)
-	}
+    #[bench]
+    fn xxhash_512_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 512)
+    }
 
-	#[bench]
-	fn xxhash_256_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 256)
-	}
+    #[bench]
+    fn xxhash_256_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 256)
+    }
 
-	#[bench]
-	fn xxhash_128_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 128)
-	}
+    #[bench]
+    fn xxhash_128_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 128)
+    }
 
-	#[bench]
-	fn xxhash_32_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 32)
-	}
+    #[bench]
+    fn xxhash_32_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 32)
+    }
 
-	#[bench]
-	fn xxhash_16_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 16)
-	}
+    #[bench]
+    fn xxhash_16_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 16)
+    }
 
-	#[bench]
-	fn xxhash_4_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 4)
-	}
+    #[bench]
+    fn xxhash_4_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 4)
+    }
 
-	#[bench]
-	fn xxhash_1_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 1)
-	}
+    #[bench]
+    fn xxhash_1_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 1)
+    }
 
-	#[bench]
-	fn xxhash_0_byte(b: &mut test::Bencher) {
-	    xxhash_bench(b, 0)
-	}
+    #[bench]
+    fn xxhash_0_byte(b: &mut test::Bencher) {
+        xxhash_bench(b, 0)
+    }
 }

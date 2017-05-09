@@ -17,16 +17,19 @@ pub struct MetroHash64 {
 }
 
 impl Default for MetroHash64 {
+    #[inline]
     fn default() -> Self {
         Self::new()
     }
 }
 
 impl MetroHash64 {
+    #[inline]
     pub fn new() -> MetroHash64 {
         Self::with_seed(0)
     }
 
+    #[inline]
     pub fn with_seed(seed: u64) -> MetroHash64 {
         let vseed = (Wrapping(seed) + K2) * K0;
         MetroHash64 {
@@ -39,7 +42,7 @@ impl MetroHash64 {
 }
 
 impl Hasher for MetroHash64 {
-
+    #[inline]
     fn write(&mut self, bytes: &[u8]) {
         let mut ptr = bytes.as_ptr() as usize;
         let end = ptr + bytes.len();
@@ -52,8 +55,9 @@ impl Hasher for MetroHash64 {
 
             unsafe {
                 ptr::copy_nonoverlapping(ptr as *const u8,
-                                         (&mut self.b as *mut _ as *mut u8)
-                                             .offset((self.bytes % 32) as isize),
+                                         (&mut self.b as *mut _ as *mut u8).offset((self.bytes %
+                                                                                    32) as
+                                                                                   isize),
                                          fill);
             }
             ptr += fill;
@@ -61,7 +65,7 @@ impl Hasher for MetroHash64 {
 
             // input buffer is still partially filled
             if self.bytes % 32 != 0 {
-                return
+                return;
             }
 
             // process full input buffer
@@ -103,6 +107,7 @@ impl Hasher for MetroHash64 {
         }
     }
 
+    #[inline]
     fn finish(&self) -> u64 {
         // copy internal state
         let mut v = self.v;

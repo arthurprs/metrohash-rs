@@ -16,25 +16,32 @@ pub struct MetroHash128 {
 }
 
 impl Default for MetroHash128 {
+    #[inline]
     fn default() -> Self {
         Self::new()
     }
 }
 
 impl MetroHash128 {
+    #[inline]
     pub fn new() -> MetroHash128 {
         Self::with_seed(0)
     }
 
+    #[inline]
     pub fn with_seed(seed: u64) -> MetroHash128 {
         let seed = Wrapping(seed);
         MetroHash128 {
             b: unsafe { mem::uninitialized() },
-            v: [(seed - K0) * K3, (seed + K1) * K2, (seed + K0) * K2, (seed - K1) * K3],
+            v: [(seed - K0) * K3,
+                (seed + K1) * K2,
+                (seed + K0) * K2,
+                (seed - K1) * K3],
             bytes: 0,
         }
     }
 
+    #[inline]
     fn finish128(&self) -> (u64, u64) {
         // copy internal state
         let mut v = self.v;
@@ -99,7 +106,7 @@ impl MetroHash128 {
 }
 
 impl Hasher for MetroHash128 {
-
+    #[inline]
     fn write(&mut self, bytes: &[u8]) {
         let mut ptr = bytes.as_ptr() as usize;
         let end = ptr + bytes.len();
@@ -112,8 +119,9 @@ impl Hasher for MetroHash128 {
 
             unsafe {
                 ptr::copy_nonoverlapping(ptr as *const u8,
-                                         (&mut self.b[0] as *mut _ as *mut u8)
-                                             .offset((self.bytes % 32) as isize),
+                                         (&mut self.b[0] as *mut _ as *mut u8).offset((self.bytes %
+                                                                                       32) as
+                                                                                      isize),
                                          fill);
             }
             ptr += fill;
@@ -121,7 +129,7 @@ impl Hasher for MetroHash128 {
 
             // input buffer is still partially filled
             if self.bytes % 32 != 0 {
-                return
+                return;
             }
 
             // process full input buffer
@@ -156,12 +164,14 @@ impl Hasher for MetroHash128 {
         // store remaining self.bytes in input buffer
         if ptr < end {
             unsafe {
-                ptr::copy_nonoverlapping(ptr as *const u8, &mut self.b[0] as *mut _ as *mut u8, end - ptr);
+                ptr::copy_nonoverlapping(ptr as *const u8,
+                                         &mut self.b[0] as *mut _ as *mut u8,
+                                         end - ptr);
             }
         }
     }
 
-    #[inline(always)]
+    #[inline]
     fn finish(&self) -> u64 {
         self.finish128().0
     }
