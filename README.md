@@ -1,10 +1,13 @@
 # Rust MetroHash
 
+[![crates.io](https://img.shields.io/crates/v/metrohash.svg)](https://crates.io/crates/metrohash)
 [![Build Status](https://travis-ci.org/arthurprs/metrohash-rs.svg)](https://travis-ci.org/arthurprs/metrohash-rs)
 
 Rust implementation of MetroHash.
 
-MetroHash is a high quality, high performance hash algorithm, always faster than the famous XXHash64. Although for small keys (up to 16 bytes) you probably want to use FNV hash instead.
+MetroHash is a high quality, high performance hash algorithm.
+
+It's mostly faster than stdlib SipHash and always faster than XXHash64. Although for small keys (up to 16 bytes) you probably want to use FNV hash instead.
 
 The current implementation is a direct translation of the original code and passes all tests. It'd be nice to have more idiomatic code in the future.
 
@@ -28,46 +31,36 @@ assert_eq!(hash.get(&1000), Some(&"1000"));
 # Benchmarks
 
 ```
-test tests::fnvhash_0_byte        ... bench:           0 ns/iter (+/- 0)
-test tests::fnvhash_1024_byte     ... bench:       1,411 ns/iter (+/- 116) = 725 MB/s
-test tests::fnvhash_128_byte      ... bench:         188 ns/iter (+/- 7) = 680 MB/s
-test tests::fnvhash_16_byte       ... bench:          23 ns/iter (+/- 2) = 695 MB/s
-test tests::fnvhash_1_byte        ... bench:           1 ns/iter (+/- 0) = 1000 MB/s
-test tests::fnvhash_256_byte      ... bench:         351 ns/iter (+/- 27) = 729 MB/s
-test tests::fnvhash_32_byte       ... bench:          44 ns/iter (+/- 3) = 727 MB/s
-test tests::fnvhash_4_byte        ... bench:           6 ns/iter (+/- 1) = 666 MB/s
-test tests::fnvhash_512_byte      ... bench:         738 ns/iter (+/- 61) = 693 MB/s
-test tests::fnvhash_megabyte      ... bench:   1,490,245 ns/iter (+/- 83,206) = 703 MB/s
-test tests::metrohash64_0_byte    ... bench:          12 ns/iter (+/- 1)
-test tests::metrohash64_1024_byte ... bench:         161 ns/iter (+/- 12) = 6360 MB/s
-test tests::metrohash64_128_byte  ... bench:          34 ns/iter (+/- 3) = 3764 MB/s
-test tests::metrohash64_16_byte   ... bench:          22 ns/iter (+/- 2) = 727 MB/s
-test tests::metrohash64_1_byte    ... bench:          23 ns/iter (+/- 3) = 43 MB/s
-test tests::metrohash64_256_byte  ... bench:          52 ns/iter (+/- 5) = 4923 MB/s
-test tests::metrohash64_32_byte   ... bench:          19 ns/iter (+/- 1) = 1684 MB/s
-test tests::metrohash64_4_byte    ... bench:          23 ns/iter (+/- 2) = 173 MB/s
-test tests::metrohash64_512_byte  ... bench:          85 ns/iter (+/- 7) = 6023 MB/s
-test tests::metrohash64_megabyte  ... bench:     146,649 ns/iter (+/- 9,034) = 7150 MB/s
-test tests::siphash_0_byte        ... bench:          18 ns/iter (+/- 1)
-test tests::siphash_1024_byte     ... bench:         813 ns/iter (+/- 50) = 1259 MB/s
-test tests::siphash_128_byte      ... bench:         119 ns/iter (+/- 7) = 1075 MB/s
-test tests::siphash_16_byte       ... bench:          30 ns/iter (+/- 3) = 533 MB/s
-test tests::siphash_1_byte        ... bench:          20 ns/iter (+/- 1) = 50 MB/s
-test tests::siphash_256_byte      ... bench:         214 ns/iter (+/- 16) = 1196 MB/s
-test tests::siphash_32_byte       ... bench:          44 ns/iter (+/- 5) = 727 MB/s
-test tests::siphash_4_byte        ... bench:          26 ns/iter (+/- 1) = 153 MB/s
-test tests::siphash_512_byte      ... bench:         419 ns/iter (+/- 33) = 1221 MB/s
-test tests::siphash_megabyte      ... bench:     824,892 ns/iter (+/- 59,512) = 1270 MB/s
-test tests::xxhash_0_byte         ... bench:          16 ns/iter (+/- 1)
-test tests::xxhash_1024_byte      ... bench:         200 ns/iter (+/- 16) = 5120 MB/s
-test tests::xxhash_128_byte       ... bench:          42 ns/iter (+/- 4) = 3047 MB/s
-test tests::xxhash_16_byte        ... bench:          28 ns/iter (+/- 2) = 571 MB/s
-test tests::xxhash_1_byte         ... bench:          28 ns/iter (+/- 2) = 35 MB/s
-test tests::xxhash_256_byte       ... bench:          65 ns/iter (+/- 5) = 3938 MB/s
-test tests::xxhash_32_byte        ... bench:          26 ns/iter (+/- 2) = 1230 MB/s
-test tests::xxhash_4_byte         ... bench:          27 ns/iter (+/- 3) = 148 MB/s
-test tests::xxhash_512_byte       ... bench:         113 ns/iter (+/- 12) = 4530 MB/s
-test tests::xxhash_megabyte       ... bench:     185,998 ns/iter (+/- 14,585) = 5637 MB/s
+test metro64::hash_004_bytes ... bench:           6 ns/iter (+/- 0) = 666 MB/s
+test metro64::hash_007_bytes ... bench:          17 ns/iter (+/- 1) = 411 MB/s
+test metro64::hash_008_bytes ... bench:           6 ns/iter (+/- 0) = 1333 MB/s
+test metro64::hash_009_bytes ... bench:          15 ns/iter (+/- 1) = 600 MB/s
+test metro64::hash_016_bytes ... bench:           8 ns/iter (+/- 0) = 2000 MB/s
+test metro64::hash_032_bytes ... bench:          10 ns/iter (+/- 0) = 3200 MB/s
+test metro64::hash_128_bytes ... bench:          18 ns/iter (+/- 0) = 7111 MB/s
+test metro64::hash_256_bytes ... bench:          28 ns/iter (+/- 1) = 9142 MB/s
+test std_sip::hash_004_bytes ... bench:          10 ns/iter (+/- 4) = 400 MB/s
+test std_sip::hash_007_bytes ... bench:          13 ns/iter (+/- 3) = 538 MB/s
+test std_sip::hash_008_bytes ... bench:          13 ns/iter (+/- 0) = 615 MB/s
+test std_sip::hash_009_bytes ... bench:          14 ns/iter (+/- 1) = 642 MB/s
+test std_sip::hash_016_bytes ... bench:          17 ns/iter (+/- 7) = 941 MB/s
+test std_sip::hash_032_bytes ... bench:          24 ns/iter (+/- 1) = 1333 MB/s
+test std_sip::hash_128_bytes ... bench:          70 ns/iter (+/- 4) = 1828 MB/s
+test std_sip::hash_256_bytes ... bench:         136 ns/iter (+/- 23) = 1882 MB/s
+test fnvh::hash_004_bytes    ... bench:           2 ns/iter (+/- 0) = 2000 MB/s
+test fnvh::hash_007_bytes    ... bench:           3 ns/iter (+/- 0) = 2333 MB/s
+test fnvh::hash_008_bytes    ... bench:           3 ns/iter (+/- 0) = 2666 MB/s
+test fnvh::hash_009_bytes    ... bench:           4 ns/iter (+/- 1) = 2250 MB/s
+test fnvh::hash_016_bytes    ... bench:           7 ns/iter (+/- 0) = 2285 MB/s
+test fnvh::hash_032_bytes    ... bench:          18 ns/iter (+/- 1) = 1777 MB/s
+test fnvh::hash_128_bytes    ... bench:         128 ns/iter (+/- 5) = 1000 MB/s
+test fnvh::hash_256_bytes    ... bench:         286 ns/iter (+/- 28) = 895 MB/s
+test xxh::hash_004_bytes     ... bench:          11 ns/iter (+/- 0) = 363 MB/s
+test xxh::hash_007_bytes     ... bench:          20 ns/iter (+/- 2) = 350 MB/s
+test xxh::hash_008_bytes     ... bench:          11 ns/iter (+/- 1) = 727 MB/s
+test xxh::hash_009_bytes     ... bench:          18 ns/iter (+/- 1) = 500 MB/s
+test xxh::hash_016_bytes     ... bench:          13 ns/iter (+/- 1) = 1230 MB/s
+test xxh::hash_032_bytes     ... bench:          17 ns/iter (+/- 0) = 1882 MB/s
+test xxh::hash_128_bytes     ... bench:          25 ns/iter (+/- 0) = 5120 MB/s
+test xxh::hash_256_bytes     ... bench:          37 ns/iter (+/- 10) = 6918 MB/s
 ```
-
-Also: [1](http://imgur.com/olhGqhU) and [2](http://imgur.com/V8evli2)

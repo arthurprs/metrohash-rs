@@ -1,275 +1,94 @@
 #![cfg_attr(test, feature(test))]
 pub extern crate test;
+#[cfg(feature = "fnv")]
 pub extern crate fnv;
+#[cfg(feature = "twox-hash")]
 pub extern crate twox_hash;
 extern crate metrohash;
 
 pub use std::hash::Hasher;
 pub use std::hash::SipHasher;
 
-pub fn hasher_bench<H>(b: &mut test::Bencher, mut hasher: H, len: usize)
-    where H: Hasher
+pub fn hasher_bench<H>(b: &mut test::Bencher, len: usize)
+    where H: Hasher + Default
 {
     let bytes: Vec<_> = (0..100).cycle().take(len).collect();
     b.bytes = bytes.len() as u64;
     b.iter(|| {
+               let mut hasher: H = Default::default();
                hasher.write(&bytes);
                hasher.finish()
            });
 }
 
-fn siphash_bench(b: &mut test::Bencher, len: usize) {
-    hasher_bench(b, SipHasher::new(), len)
+macro_rules! impl_bench {
+    ($mod_name: ident, $hasher: ty) => (
+        mod $mod_name {
+            use super::*;
+
+            // #[bench]
+            // fn hash_1_mega_bytes(b: &mut test::Bencher) {
+            //     hasher_bench::<$hasher>(b, 1024 * 1024)
+            // }
+            //
+            // #[bench]
+            // fn hash_1_kilo_bytes(b: &mut test::Bencher) {
+            //     hasher_bench::<$hasher>(b, 1024)
+            // }
+            //
+            // #[bench]
+            // fn hash_512_bytes(b: &mut test::Bencher) {
+            //     hasher_bench::<$hasher>(b, 512)
+            // }
+
+            #[bench]
+            fn hash_256_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 256)
+            }
+
+            #[bench]
+            fn hash_128_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 128)
+            }
+
+            #[bench]
+            fn hash_032_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 32)
+            }
+
+            #[bench]
+            fn hash_016_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 16)
+            }
+
+            #[bench]
+            fn hash_009_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 9)
+            }
+
+            #[bench]
+            fn hash_008_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 8)
+            }
+
+            #[bench]
+            fn hash_007_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 7)
+            }
+
+            #[bench]
+            fn hash_004_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 4)
+            }
+        }
+    );
 }
 
-fn metrohash64_bench(b: &mut test::Bencher, len: usize) {
-    hasher_bench(b, metrohash::MetroHash64::new(), len)
-}
-
-#[bench]
-fn siphash_megabyte(b: &mut test::Bencher) {
-    siphash_bench(b, 1024 * 1024)
-}
-
-#[bench]
-fn siphash_1024_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 1024)
-}
-
-#[bench]
-fn siphash_512_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 512)
-}
-
-#[bench]
-fn siphash_256_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 256)
-}
-
-#[bench]
-fn siphash_128_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 128)
-}
-
-#[bench]
-fn siphash_32_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 32)
-}
-
-#[bench]
-fn siphash_16_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 16)
-}
-
-#[bench]
-fn siphash_4_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 4)
-}
-
-#[bench]
-fn siphash_1_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 1)
-}
-
-#[bench]
-fn siphash_0_byte(b: &mut test::Bencher) {
-    siphash_bench(b, 0)
-}
-
+impl_bench!(std_sip, SipHasher);
+impl_bench!(metro64, metrohash::MetroHash64);
+// avoid bloat, performance is virtually the same
+// impl_bench!(metro128, metrohash::MetroHash128);
 #[cfg(feature = "fnv")]
-mod feature_fnv {
-    use super::*;
-
-    fn fnvhash_bench(b: &mut test::Bencher, len: usize) {
-        hasher_bench(b, <fnv::FnvHasher as Default>::default(), len)
-    }
-
-    #[bench]
-    fn fnvhash_megabyte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 1024 * 1024)
-    }
-
-    #[bench]
-    fn fnvhash_1024_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 1024)
-    }
-
-    #[bench]
-    fn fnvhash_512_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 512)
-    }
-
-    #[bench]
-    fn fnvhash_256_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 256)
-    }
-
-    #[bench]
-    fn fnvhash_128_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 128)
-    }
-
-    #[bench]
-    fn fnvhash_32_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 32)
-    }
-
-    #[bench]
-    fn fnvhash_16_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 16)
-    }
-
-    #[bench]
-    fn fnvhash_4_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 4)
-    }
-
-    #[bench]
-    fn fnvhash_1_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 1)
-    }
-
-    #[bench]
-    fn fnvhash_0_byte(b: &mut test::Bencher) {
-        fnvhash_bench(b, 0)
-    }
-}
-
-#[bench]
-fn metrohash64_megabyte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 1024 * 1024)
-}
-
-#[bench]
-fn metrohash64_1024_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 1024)
-}
-
-#[bench]
-fn metrohash64_512_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 512)
-}
-
-#[bench]
-fn metrohash64_256_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 256)
-}
-
-#[bench]
-fn metrohash64_128_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 128)
-}
-
-#[bench]
-fn metrohash64_32_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 32)
-}
-
-#[bench]
-fn metrohash64_16_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 16)
-}
-
-#[bench]
-fn metrohash64_4_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 4)
-}
-
-#[bench]
-fn metrohash64_1_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 1)
-}
-
-#[bench]
-fn metrohash64_0_byte(b: &mut test::Bencher) {
-    metrohash64_bench(b, 0)
-}
-
-// #[bench]
-// fn metrohash128_megabyte(b: &mut test::Bencher) { metrohash128_bench(b, 1024*1024) }
-
-// #[bench]
-// fn metrohash128_1024_byte(b: &mut test::Bencher) { metrohash128_bench(b, 1024) }
-
-// #[bench]
-// fn metrohash128_512_byte(b: &mut test::Bencher) { metrohash128_bench(b, 512) }
-
-// #[bench]
-// fn metrohash128_256_byte(b: &mut test::Bencher) { metrohash128_bench(b, 256) }
-
-// #[bench]
-// fn metrohash128_128_byte(b: &mut test::Bencher) { metrohash128_bench(b, 128) }
-
-// #[bench]
-// fn metrohash128_32_byte(b: &mut test::Bencher) { metrohash128_bench(b, 32) }
-
-// #[bench]
-// fn metrohash128_16_byte(b: &mut test::Bencher) { metrohash128_bench(b, 16) }
-
-// #[bench]
-// fn metrohash128_4_byte(b: &mut test::Bencher) { metrohash128_bench(b, 4) }
-
-// #[bench]
-// fn metrohash128_1_byte(b: &mut test::Bencher) { metrohash64_bench(b, 1) }
-
-// #[bench]
-// fn metrohash128_0_byte(b: &mut test::Bencher) { metrohash64_bench(b, 0) }
-
+impl_bench!(fnvh, fnv::FnvHasher);
 #[cfg(feature = "twox-hash")]
-mod feature_twoxhash {
-    use super::*;
-
-    fn xxhash_bench(b: &mut test::Bencher, len: usize) {
-        hasher_bench(b, twox_hash::XxHash::with_seed(0), len)
-    }
-
-    #[bench]
-    fn xxhash_megabyte(b: &mut test::Bencher) {
-        xxhash_bench(b, 1024 * 1024)
-    }
-
-    #[bench]
-    fn xxhash_1024_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 1024)
-    }
-
-    #[bench]
-    fn xxhash_512_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 512)
-    }
-
-    #[bench]
-    fn xxhash_256_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 256)
-    }
-
-    #[bench]
-    fn xxhash_128_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 128)
-    }
-
-    #[bench]
-    fn xxhash_32_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 32)
-    }
-
-    #[bench]
-    fn xxhash_16_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 16)
-    }
-
-    #[bench]
-    fn xxhash_4_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 4)
-    }
-
-    #[bench]
-    fn xxhash_1_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 1)
-    }
-
-    #[bench]
-    fn xxhash_0_byte(b: &mut test::Bencher) {
-        xxhash_bench(b, 0)
-    }
-}
+impl_bench!(xxh, twox_hash::XxHash);
