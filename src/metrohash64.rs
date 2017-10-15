@@ -1,6 +1,5 @@
 use std::num::Wrapping;
 use std::mem;
-use std::ptr;
 use std::hash::Hasher;
 use utils::*;
 
@@ -54,11 +53,11 @@ impl Hasher for MetroHash64 {
             }
 
             unsafe {
-                ptr::copy_nonoverlapping(ptr as *const u8,
-                                         (&mut self.b as *mut _ as *mut u8).offset((self.bytes %
-                                                                                    32) as
-                                                                                   isize),
-                                         fill);
+                copy_32(
+                    ptr as *const u8,
+                    (&mut self.b as *mut _ as *mut u8).offset((self.bytes % 32) as isize),
+                    fill,
+                );
             }
             ptr += fill;
             self.bytes += fill;
@@ -100,9 +99,11 @@ impl Hasher for MetroHash64 {
         // store remaining self.bytes in input buffer
         if ptr < end {
             unsafe {
-                ptr::copy_nonoverlapping(ptr as *const u8,
-                                         &mut self.b as *mut _ as *mut u8,
-                                         end - ptr);
+                copy_32(
+                    ptr as *const u8,
+                    &mut self.b as *mut _ as *mut u8,
+                    end - ptr,
+                );
             }
         }
     }

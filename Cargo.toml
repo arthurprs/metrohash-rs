@@ -1,6 +1,6 @@
 [package]
 name = "metrohash"
-version = "1.0.1"
+version = "1.0.2"
 authors = ["arthurprs <arthurprs@gmail.com>"]
 description = "Rust implementation of MetroHash, a high quality, high performance hash algorithm"
 readme = "README.md"

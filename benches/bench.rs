@@ -1,24 +1,38 @@
 #![cfg_attr(test, feature(test))]
-pub extern crate test;
+extern crate metrohash;
 #[cfg(feature = "fnv")]
 pub extern crate fnv;
+pub extern crate test;
 #[cfg(feature = "twox-hash")]
 pub extern crate twox_hash;
-extern crate metrohash;
 
 pub use std::hash::Hasher;
 pub use std::hash::SipHasher;
 
 pub fn hasher_bench<H>(b: &mut test::Bencher, len: usize)
-    where H: Hasher + Default
+where
+    H: Hasher + Default,
 {
     let bytes: Vec<_> = (0..100).cycle().take(len).collect();
     b.bytes = bytes.len() as u64;
     b.iter(|| {
-               let mut hasher: H = Default::default();
-               hasher.write(&bytes);
-               hasher.finish()
-           });
+        let mut hasher: H = Default::default();
+        hasher.write(&bytes);
+        hasher.finish()
+    });
+}
+
+pub fn hasher_bench_u64<H>(b: &mut test::Bencher, len: usize)
+where
+    H: Hasher + Default,
+{
+    let int = b as *const _ as usize as u64;
+    b.bytes = 8;
+    b.iter(|| {
+        let mut hasher: H = Default::default();
+        hasher.write_u64(int);
+        hasher.finish()
+    });
 }
 
 macro_rules! impl_bench {
@@ -31,15 +45,15 @@ macro_rules! impl_bench {
             //     hasher_bench::<$hasher>(b, 1024 * 1024)
             // }
             //
-            // #[bench]
-            // fn hash_1_kilo_bytes(b: &mut test::Bencher) {
-            //     hasher_bench::<$hasher>(b, 1024)
-            // }
-            //
-            // #[bench]
-            // fn hash_512_bytes(b: &mut test::Bencher) {
-            //     hasher_bench::<$hasher>(b, 512)
-            // }
+            #[bench]
+            fn hash_1_kilo_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 1024)
+            }
+
+            #[bench]
+            fn hash_512_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 512)
+            }
 
             #[bench]
             fn hash_256_bytes(b: &mut test::Bencher) {
@@ -62,6 +76,11 @@ macro_rules! impl_bench {
             }
 
             #[bench]
+            fn hash_012_bytes(b: &mut test::Bencher) {
+                hasher_bench::<$hasher>(b, 12)
+            }
+
+            #[bench]
             fn hash_009_bytes(b: &mut test::Bencher) {
                 hasher_bench::<$hasher>(b, 9)
             }
@@ -79,6 +98,11 @@ macro_rules! impl_bench {
             #[bench]
             fn hash_004_bytes(b: &mut test::Bencher) {
                 hasher_bench::<$hasher>(b, 4)
+            }
+
+            #[bench]
+            fn hash_u64(b: &mut test::Bencher) {
+                hasher_bench_u64::<$hasher>(b, 4)
             }
         }
     );
