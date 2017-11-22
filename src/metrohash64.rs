@@ -82,16 +82,17 @@ impl Hasher for MetroHash64 {
         self.bytes += end - ptr;
         while ptr + 32 <= end {
             // process directly from the source, bypassing the input buffer
-            self.v[0] = self.v[0] + (read_u64(ptr) * K0);
+            // these reads may be unaligned
+            self.v[0] = self.v[0] + (read_u64_unaligned(ptr) * K0);
             ptr += 8;
             self.v[0] = rotate_right(self.v[0], 29) + self.v[2];
-            self.v[1] = self.v[1] + (read_u64(ptr) * K1);
+            self.v[1] = self.v[1] + (read_u64_unaligned(ptr) * K1);
             ptr += 8;
             self.v[1] = rotate_right(self.v[1], 29) + self.v[3];
-            self.v[2] = self.v[2] + (read_u64(ptr) * K2);
+            self.v[2] = self.v[2] + (read_u64_unaligned(ptr) * K2);
             ptr += 8;
             self.v[2] = rotate_right(self.v[2], 29) + self.v[0];
-            self.v[3] = self.v[3] + (read_u64(ptr) * K3);
+            self.v[3] = self.v[3] + (read_u64_unaligned(ptr) * K3);
             ptr += 8;
             self.v[3] = rotate_right(self.v[3], 29) + self.v[1];
         }
