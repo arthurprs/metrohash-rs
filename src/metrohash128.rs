@@ -43,7 +43,7 @@ impl MetroHash128 {
     }
 
     #[inline]
-    fn finish128(&self) -> (u64, u64) {
+    pub fn finish128(&self) -> (u64, u64) {
         // copy internal state
         let mut v = self.v;
 
