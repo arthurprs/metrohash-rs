@@ -1,6 +1,7 @@
 # Rust MetroHash
 
 [![crates.io](https://img.shields.io/crates/v/metrohash.svg)](https://crates.io/crates/metrohash)
+[![Docs](https://docs.rs/metrohash/badge.svg)](https://docs.rs/metrohash)
 [![Build Status](https://travis-ci.org/arthurprs/metrohash-rs.svg)](https://travis-ci.org/arthurprs/metrohash-rs)
 
 MetroHash is a high quality, high performance hash algorithm.

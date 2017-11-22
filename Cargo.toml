@@ -1,6 +1,6 @@
 [package]
 name = "metrohash"
-version = "1.0.2"
+version = "1.0.4"
 authors = ["arthurprs <arthurprs@gmail.com>"]
 description = "Rust implementation of MetroHash, a high quality, high performance hash algorithm"
 readme = "README.md"
@@ -8,7 +8,7 @@ keywords = ["hash", "hashmap", "metro", "metrohash"]
 categories = ["algorithms"]
 homepage = "https://github.com/arthurprs/metrohash-rs"
 repository = "https://github.com/arthurprs/metrohash-rs"
-documentation = "https://github.com/arthurprs/metrohash-rs"
+documentation = "https://docs.rs/metrohash"
 license = "MIT"
 
 [dev-dependencies]
