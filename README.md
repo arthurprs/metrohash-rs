@@ -10,6 +10,8 @@ It hashes small keys in the single digit nanoseconds and surpasses 10+ GB/s in m
 
 Since the hash quality is also excellent (passes SMhasher), it's a good alternative in any situation where cryptographic security is not required.
 
+Note that the algorithm is not stable across different endianesses and is optimized for 64bit platforms with fast unaligned memory access.
+
 # Usage
 
 ```rust
