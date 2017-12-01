@@ -3,10 +3,10 @@ use std::ptr;
 
 macro_rules! impl_read {
 	($fn_name: ident, $ty: ty) => (
-		#[inline(always)]
-		pub fn $fn_name(ptr_addr: usize) -> Wrapping<u64> {
+		#[inline]
+		pub unsafe fn $fn_name(ptr_addr: usize) -> Wrapping<u64> {
 			let ptr = ptr_addr as *const $ty;
-			Wrapping(unsafe { *ptr as u64 })
+			Wrapping(ptr::read(ptr) as u64)
 		}
 	)
 }
@@ -16,9 +16,10 @@ impl_read!(read_u32, u32);
 impl_read!(read_u16, u16);
 impl_read!(read_u8, u8);
 
-pub fn read_u64_unaligned(ptr_addr: usize) -> Wrapping<u64> {
+#[inline]
+pub unsafe fn read_u64_unaligned(ptr_addr: usize) -> Wrapping<u64> {
 	let the_ptr = ptr_addr as *const u64;
-	Wrapping(unsafe { ptr::read_unaligned(the_ptr) as u64 })
+	Wrapping(ptr::read_unaligned(the_ptr) as u64)
 }
 
 
