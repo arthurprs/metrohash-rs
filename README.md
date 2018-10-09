@@ -16,9 +16,9 @@ Note that the algorithm is not stable across different endianesses and is optimi
 
 ```rust
 extern crate metrohash;
-use metrohash::MetroHashMap
+use metrohash::MetroHashMap;
 
-let mut hash: = MetroHashMap::default();
+let mut hash = MetroHashMap::default();
 hash.insert(1000, "1000");
 assert_eq!(hash.get(&1000), Some(&"1000"));
 ```
