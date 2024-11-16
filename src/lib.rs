@@ -15,12 +15,12 @@
 use std::collections::{HashMap, HashSet};
 use std::hash::BuildHasherDefault;
 
-mod metrohash64;
 mod metrohash128;
+mod metrohash64;
 mod utils;
 
-pub use metrohash64::*;
 pub use metrohash128::*;
+pub use metrohash64::*;
 
 pub type MetroHash = MetroHash64;
 
@@ -32,7 +32,6 @@ pub type MetroHashMap<K, V> = HashMap<K, V, MetroBuildHasher>;
 
 /// A `HashSet` using a default MetroHash.
 pub type MetroHashSet<V> = HashSet<V, MetroBuildHasher>;
-
 
 #[cfg(test)]
 mod tests;

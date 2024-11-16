@@ -2,13 +2,13 @@ use std::num::Wrapping;
 use std::ptr;
 
 macro_rules! impl_read {
-	($fn_name: ident, $ty: ty) => (
-		#[inline]
-		pub unsafe fn $fn_name(ptr_addr: usize) -> Wrapping<u64> {
-			let ptr = ptr_addr as *const $ty;
-			Wrapping(ptr::read(ptr) as u64)
-		}
-	)
+    ($fn_name: ident, $ty: ty) => {
+        #[inline]
+        pub unsafe fn $fn_name<T>(ptr_addr: *const T) -> Wrapping<u64> {
+            let the_ptr = ptr_addr.cast::<$ty>();
+            Wrapping(ptr::read(the_ptr) as u64)
+        }
+    };
 }
 
 impl_read!(read_u64, u64);
@@ -17,11 +17,10 @@ impl_read!(read_u16, u16);
 impl_read!(read_u8, u8);
 
 #[inline]
-pub unsafe fn read_u64_unaligned(ptr_addr: usize) -> Wrapping<u64> {
-	let the_ptr = ptr_addr as *const u64;
-	Wrapping(ptr::read_unaligned(the_ptr) as u64)
+pub unsafe fn read_u64_unaligned<T>(ptr_addr: *const T) -> Wrapping<u64> {
+    let the_ptr = ptr_addr.cast::<u64>();
+    Wrapping(ptr::read_unaligned(the_ptr))
 }
-
 
 #[inline]
 pub unsafe fn copy_32(src: *const u8, dest: *mut u8, n: usize) {

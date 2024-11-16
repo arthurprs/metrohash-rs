@@ -1,7 +1,7 @@
 #![cfg_attr(test, feature(test))]
-extern crate metrohash;
 #[cfg(feature = "fnv")]
 pub extern crate fnv;
+extern crate metrohash;
 pub extern crate test;
 #[cfg(feature = "twox-hash")]
 pub extern crate twox_hash;
@@ -36,7 +36,7 @@ where
 }
 
 macro_rules! impl_bench {
-    ($mod_name: ident, $hasher: ty) => (
+    ($mod_name: ident, $hasher: ty) => {
         mod $mod_name {
             use super::*;
 
@@ -105,7 +105,7 @@ macro_rules! impl_bench {
                 hasher_bench_u64::<$hasher>(b, 4)
             }
         }
-    );
+    };
 }
 
 impl_bench!(std_sip, SipHasher);
